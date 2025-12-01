@@ -3,7 +3,7 @@ name: Custom issue template
 about: General issues, both bugs and features.
 title: ''
 labels: ''
-assignees: mssola
+assignees: patrickpoortman
 ---
 
 ### Description

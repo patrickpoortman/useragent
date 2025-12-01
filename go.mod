@@ -1,3 +1,3 @@
-module github.com/mssola/useragent
+module github.com/patrickpoortman/useragent
 
-go 1.13
+go 1.25.4
