@@ -7,9 +7,26 @@ package useragent
 import (
 	"regexp"
 	"strings"
+	"sync"
 )
 
 var botFromSiteRegexp = regexp.MustCompile(`http[s]?://.+\.\w+`)
+
+var (
+	badBotsList []string
+	badBotsOnce sync.Once
+)
+
+// LoadBadBotsYAML loads the bad bots list from YAML only once (thread-safe).
+func LoadBadBotsYAML() []string {
+	badBotsOnce.Do(func() {
+		list, err := LoadBadBots("bad_bots.yaml")
+		if err == nil {
+			badBotsList = list
+		}
+	})
+	return badBotsList
+}
 
 // Get the name of the bot from the website that may be in the given comment. If
 // there is no website in the comment, then an empty string is returned.
@@ -101,38 +118,40 @@ func (p *UserAgent) fixOther(sections []section) {
 	}
 }
 
-var botRegex = regexp.MustCompile("(?i)(bot|crawler|sp(i|y)der|search|worm|fetch|nutch)")
+// Checks if the given string contains any known bad bot substring (case-insensitive).
+func isKnownBadBot(s string) bool {
+	for _, bot := range LoadBadBotsYAML() {
+		if strings.Contains(strings.ToLower(s), strings.ToLower(bot)) {
+			return true
+		}
+	}
+	return false
+}
 
 // Check if we're dealing with a bot or with some weird browser. If that is the
 // case, the receiver will be modified accordingly.
 func (p *UserAgent) checkBot(sections []section) {
-	// If there's only one element, and it's doesn't have the Mozilla string,
+	// If there's only one element, and it doesn't have the Mozilla string,
 	// check whether this is a bot or not.
 	if len(sections) == 1 && sections[0].name != "Mozilla" {
 		p.mozilla = ""
 
-		// Check whether the name has some suspicious "bot" or "crawler" in his name.
-		if botRegex.Match([]byte(sections[0].name)) {
+		// Check whether the name matches any known bad bot substring.
+		if isKnownBadBot(sections[0].name) {
 			p.setSimple(sections[0].name, "", true)
 			return
 		}
 
 		// Tough luck, let's try to see if it has a website in his comment.
 		if name := getFromSite(sections[0].comment); name != "" {
-			// First of all, this is a bot. Moreover, since it doesn't have the
-			// Mozilla string, we can assume that the name and the version are
-			// the ones from the first section.
 			p.setSimple(sections[0].name, sections[0].version, true)
 			return
 		}
 
-		// At this point we are sure that this is not a bot, but some weirdo.
 		p.setSimple(sections[0].name, sections[0].version, false)
 	} else {
-		// Let's iterate over the available comments and check for a website.
 		for _, v := range sections {
 			if name := getFromSite(v.comment); name != "" {
-				// Ok, we've got a bot name.
 				results := strings.SplitN(name, "/", 2)
 				version := ""
 				if len(results) == 2 {
@@ -141,9 +160,12 @@ func (p *UserAgent) checkBot(sections []section) {
 				p.setSimple(results[0], version, true)
 				return
 			}
+			// Also check each section name for known bad bots
+			if isKnownBadBot(v.name) {
+				p.setSimple(v.name, v.version, true)
+				return
+			}
 		}
-
-		// We will assume that this is some other weird browser.
 		p.fixOther(sections)
 	}
 }
