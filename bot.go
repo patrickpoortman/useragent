@@ -138,77 +138,77 @@ func isKnownBadBot(s string) bool {
 func (p *UserAgent) checkBot(sections []section) bool {
 	// If there's only one element, and it doesn't have the Mozilla string,
 	// check whether this is a bot or not.
-	       if len(sections) == 1 && sections[0].name != "Mozilla" {
-		       // Check whether the name matches any known bad bot substring.
-		       if isKnownBadBot(sections[0].name) {
-			       p.setSimple(sections[0].name, sections[0].version, true)
-			       return true
-		       }
+	if len(sections) == 1 && sections[0].name != "Mozilla" {
+		// Check whether the name matches any known bad bot substring.
+		if isKnownBadBot(sections[0].name) {
+			p.setSimple(sections[0].name, sections[0].version, true)
+			return true
+		}
 
-		       // Tough luck, let's try to see if it has a website in his comment.
-		       if name := getFromSite(sections[0].comment); name != "" {
-			       p.setSimple(sections[0].name, sections[0].version, true)
-			       return true
-		       }
+		// Tough luck, let's try to see if it has a website in his comment.
+		if name := getFromSite(sections[0].comment); name != "" {
+			p.setSimple(sections[0].name, sections[0].version, true)
+			return true
+		}
 
-		       return false
-	       } else {
-			       for _, v := range sections {
-				       // Check comments for known bad bots
-				       for _, c := range v.comment {
-					       matched := ""
-					       matchedVersion := ""
-					       matchedOriginal := ""
-					       for _, bot := range LoadBadBotsYAML() {
-						       idx := strings.Index(strings.ToLower(c), strings.ToLower(bot))
-						       if idx != -1 {
-							       // Use the original case from the user agent string
-							       matchedOriginal = c[idx:idx+len(bot)]
-							       matched = bot
-							       // Try to extract version if present (e.g., GPTBot/1.3)
-							       // Look for botname/version pattern
-							       lowerC := c[idx:]
-							       parts := strings.SplitN(lowerC, "/", 2)
-							       if len(parts) == 2 {
-								       // Extract version up to next space or semicolon
-								       ver := parts[1]
-								       for i, ch := range ver {
-									       if ch == ' ' || ch == ';' {
-										       ver = ver[:i]
-										       break
-									       }
-								       }
-								       matchedVersion = ver
-							       }
-							       break
-						       }
-					       }
-					       if matched != "" {
-						       // Use the original case from the user agent string for the browser name
-						       nameToSet := matchedOriginal
-						       if nameToSet == "" {
-							       nameToSet = matched
-						       }
-						       p.setSimple(nameToSet, matchedVersion, true)
-						       return true
-					       }
-				       }
-				       if name := getFromSite(v.comment); name != "" {
-					       results := strings.SplitN(name, "/", 2)
-					       version := ""
-					       if len(results) == 2 {
-						       version = results[1]
-					       }
-					       p.setSimple(results[0], version, true)
-					       return true
-				       }
-				       // Also check each section name for known bad bots
-				       if isKnownBadBot(v.name) {
-					       // Use the original case from the section name
-					       p.setSimple(v.name, v.version, true)
-					       return true
-				       }
-			       }
-			       return false
-	       }
+		return false
+	} else {
+		for _, v := range sections {
+			// Check comments for known bad bots
+			for _, c := range v.comment {
+				matched := ""
+				matchedVersion := ""
+				matchedOriginal := ""
+				for _, bot := range LoadBadBotsYAML() {
+					idx := strings.Index(strings.ToLower(c), strings.ToLower(bot))
+					if idx != -1 {
+						// Use the original case from the user agent string
+						matchedOriginal = c[idx : idx+len(bot)]
+						matched = bot
+						// Try to extract version if present (e.g., GPTBot/1.3)
+						// Look for botname/version pattern
+						lowerC := c[idx:]
+						parts := strings.SplitN(lowerC, "/", 2)
+						if len(parts) == 2 {
+							// Extract version up to next space or semicolon
+							ver := parts[1]
+							for i, ch := range ver {
+								if ch == ' ' || ch == ';' {
+									ver = ver[:i]
+									break
+								}
+							}
+							matchedVersion = ver
+						}
+						break
+					}
+				}
+				if matched != "" {
+					// Use the original case from the user agent string for the browser name
+					nameToSet := matchedOriginal
+					if nameToSet == "" {
+						nameToSet = matched
+					}
+					p.setSimple(nameToSet, matchedVersion, true)
+					return true
+				}
+			}
+			if name := getFromSite(v.comment); name != "" {
+				results := strings.SplitN(name, "/", 2)
+				version := ""
+				if len(results) == 2 {
+					version = results[1]
+				}
+				p.setSimple(results[0], version, true)
+				return true
+			}
+			// Also check each section name for known bad bots
+			if isKnownBadBot(v.name) {
+				// Use the original case from the section name
+				p.setSimple(v.name, v.version, true)
+				return true
+			}
+		}
+		return false
+	}
 }
