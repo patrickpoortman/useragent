@@ -151,6 +151,20 @@ func (p *UserAgent) checkBot(sections []section) {
 		p.setSimple(sections[0].name, sections[0].version, false)
 	} else {
 		for _, v := range sections {
+			// Check comments for known bad bots
+			for _, c := range v.comment {
+				matched := ""
+				for _, bot := range LoadBadBotsYAML() {
+					if strings.Contains(strings.ToLower(c), strings.ToLower(bot)) {
+						matched = bot
+						break
+					}
+				}
+				if matched != "" {
+					p.setSimple(matched, "", true)
+					return
+				}
+			}
 			if name := getFromSite(v.comment); name != "" {
 				results := strings.SplitN(name, "/", 2)
 				version := ""

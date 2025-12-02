@@ -20,6 +20,16 @@ var uastrings = []struct {
 }{
 	// Bots
 	{
+		title:    "Chrome 143 on MacOS",
+		ua:       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+		expected: "Mozilla:5.0 Platform:Macintosh OS:Intel Mac OS X 10_15_7 Browser:Chrome-143.0.0.0 Engine:AppleWebKit-537.36 Bot:false Mobile:false",
+	},
+	{
+		title:    "Chrome 54 on macOS",
+		ua:       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.4092.1541 Safari/537.36",
+		expected: "Mozilla:5.0 Platform:Macintosh OS:Intel Mac OS X 10_14_0 Browser:Chrome-54.0.4092.1541 Engine:AppleWebKit-537.36 Bot:false Mobile:false",
+	},
+	{
 		title:    "GoogleBot",
 		ua:       "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
 		expected: "Mozilla:5.0 Browser:Googlebot-2.1 Bot:true Mobile:false",
@@ -62,7 +72,7 @@ var uastrings = []struct {
 	{
 		title:    "BaiduBot",
 		ua:       "Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)",
-		expected: "Mozilla:5.0 Browser:Baiduspider-2.0 Bot:true Mobile:false",
+		expected: "Mozilla:5.0 Browser:Baiduspider Bot:true Mobile:false",
 	},
 	{
 		title:    "Twitterbot",
@@ -97,7 +107,7 @@ var uastrings = []struct {
 	{
 		title:    "MJ12bot",
 		ua:       "Mozilla/5.0 (compatible; MJ12bot/v1.2.4; http://www.majestic12.co.uk/bot.php?+)",
-		expected: "Mozilla:5.0 Browser:MJ12bot-v1.2.4 Bot:true Mobile:false",
+		expected: "Mozilla:5.0 Browser:MJ12bot Bot:true Mobile:false",
 	},
 	{
 		title:    "MJ12bot",
@@ -107,7 +117,7 @@ var uastrings = []struct {
 	{
 		title:    "AhrefsBot",
 		ua:       "Mozilla/5.0 (compatible; AhrefsBot/4.0; +http://ahrefs.com/robot/)",
-		expected: "Mozilla:5.0 Browser:AhrefsBot-4.0 Bot:true Mobile:false",
+		expected: "Mozilla:5.0 Browser:AhrefsBot Bot:true Mobile:false",
 	},
 	{
 		title:    "AdsBotGoogle",

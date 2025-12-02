@@ -51,6 +51,8 @@ func normalizeOS(name string) string {
 		return "Windows 8.1"
 	case "10.0":
 		return "Windows 10"
+	case "13.0":
+		return "Windows 11"
 	}
 	return name
 }
