@@ -25,6 +25,16 @@ var uastrings = []struct {
 		expected: "Mozilla:5.0 Platform:Macintosh OS:Intel Mac OS X 10_15_7 Browser:Chrome-143.0.0.0 Engine:AppleWebKit-537.36 Bot:false Mobile:false",
 	},
 	{
+		title:    "Firefox 145 on MacOS",
+		ua:       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:145.0) Gecko/20100101 Firefox/145.0",
+		expected: "Mozilla:5.0 Platform:Macintosh OS:Intel Mac OS X 10.15 Browser:Firefox-145.0 Engine:Gecko-20100101 Bot:false Mobile:false",
+	},
+	{
+		title:    "chatgpt",
+		ua:       "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; GPTBot/1.3; +https://openai.com/gptbot)",
+		expected: "Mozilla:5.0 Browser:GPTBot-1.3 Bot:true Mobile:false",
+	},
+	{
 		title:    "Chrome 54 on macOS",
 		ua:       "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.4092.1541 Safari/537.36",
 		expected: "Mozilla:5.0 Platform:Macintosh OS:Intel Mac OS X 10_14_0 Browser:Chrome-54.0.4092.1541 Engine:AppleWebKit-537.36 Bot:false Mobile:false",
@@ -102,7 +112,7 @@ var uastrings = []struct {
 	{
 		title:    "NutchCVS",
 		ua:       "NutchCVS/0.8-dev (Nutch; http://lucene.apache.org/nutch/bot.html; nutch-agent@lucene.apache.org)",
-		expected: "Browser:NutchCVS Bot:true Mobile:false",
+		expected: "Browser:NutchCVS-0.8-dev Bot:true Mobile:false",
 	},
 	{
 		title:    "MJ12bot",
@@ -112,7 +122,7 @@ var uastrings = []struct {
 	{
 		title:    "MJ12bot",
 		ua:       "MJ12bot/v1.0.8 (http://majestic12.co.uk/bot.php?+)",
-		expected: "Browser:MJ12bot Bot:true Mobile:false",
+		expected: "Browser:MJ12bot-v1.0.8 Bot:true Mobile:false",
 	},
 	{
 		title:    "AhrefsBot",

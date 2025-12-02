@@ -162,8 +162,21 @@ func (p *UserAgent) Parse(ua string) {
 		p.detectOS(sections[0])
 		p.detectModel(sections[0])
 
-		if p.undecided {
-			p.checkBot(sections)
+		// Only let checkBot overwrite browser fields if a bot is detected
+		_ = p.checkBot(sections)
+
+		// If browser name is still empty, set it to the first section's name (and version if present)
+		if p.browser.Name == "" && len(sections) > 0 {
+			name := sections[0].name
+			version := sections[0].version
+			if name != "" && version != "" {
+				p.browser.Name = name
+				p.browser.Version = version
+			} else if name != "" {
+				p.browser.Name = name
+			} else {
+				p.browser.Name = "nil"
+			}
 		}
 	}
 }
