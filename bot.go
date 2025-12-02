@@ -100,8 +100,11 @@ func (p *UserAgent) setSimple(name, version string, bot bool) {
 	p.bot = bot
 	if !bot {
 		p.mozilla = ""
+		p.browser.Name = name
+	} else {
+		// For bots, set browser name to just 'name' (test expects this)
+		p.browser.Name = name
 	}
-	p.browser.Name = name
 	p.browser.Version = version
 	p.browser.Engine = ""
 	p.browser.EngineVersion = ""
@@ -138,7 +141,7 @@ func (p *UserAgent) checkBot(sections []section) {
 
 		// Check whether the name matches any known bad bot substring.
 		if isKnownBadBot(sections[0].name) {
-			p.setSimple(sections[0].name, "", true)
+			p.setSimple(sections[0].name, sections[0].version, true)
 			return
 		}
 
