@@ -112,7 +112,7 @@ var uastrings = []struct {
 	{
 		title:    "NutchCVS",
 		ua:       "NutchCVS/0.8-dev (Nutch; http://lucene.apache.org/nutch/bot.html; nutch-agent@lucene.apache.org)",
-		expected: "Browser:NutchCVS Bot:true Mobile:false",
+		expected: "Browser:NutchCVS-0.8-dev Bot:true Mobile:false",
 	},
 	{
 		title:    "MJ12bot",
@@ -122,7 +122,7 @@ var uastrings = []struct {
 	{
 		title:    "MJ12bot",
 		ua:       "MJ12bot/v1.0.8 (http://majestic12.co.uk/bot.php?+)",
-		expected: "Browser:MJ12bot Bot:true Mobile:false",
+		expected: "Browser:MJ12bot-v1.0.8 Bot:true Mobile:false",
 	},
 	{
 		title:    "AhrefsBot",
